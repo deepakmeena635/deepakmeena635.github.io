@@ -1,47 +1,74 @@
-var fr;
-var inc = 0.01 ;
-var scl =10 ;
-var zoff = 0 ;
+let scl = 10;
+let cols;
+let rows;
+let inc = 0.02; // increment value for perlin noise
+let fr; // frame rate for display
+let zoff = 0;
+let particles = [];
+let flowfield;
+let numParticles;
+let modeSelectMenu;
+let drawMode = "White Flies";
+let reseedMode;
+let reseedModeCurrent = true;
+let displayFieldMode;
+let displayFieldModeCurrent = false;
+let modalButton;
 
-function setup(){
-  createCanvas(200,200)
-  pixelDensity(1);
-  cols = floor(width/scl)
-  rows = floor(height/scl)
-  fr = createP();
+function setup() {
+  // createCanvas(600, 400);
+  createCanvas(windowWidth, windowHeight );
 
-  for (var i=0  ; i<100; i++ ){
-    particle[0] = new particle();
-  }
+  ff = createGraphics(windowWidth, windowHeight ); // for displaying flow field
+
+  cols = floor(width / scl);
+  rows = floor(height / scl);
+  numParticles = 6000;
+  seedParticles(numParticles);
+  flowfield = new Array(cols * rows);
+  background(0);
+
 
 }
 
-function draw(){
-    background(255)
-    var yoff = 0 ;
-    for (var y =0 ; y< height; y++ ){
+function seedParticles(num) {
+  particles = [];
+  for (let i = 0; i < num; i++) {
+    particles[i] = new Particle();
+  }
+}
 
-      var xoff =0 ;
-      for (var x=0 ; x<width ;x++ ){
+function draw() {
+  if (drawMode == "White Flies") {
+    background(0); // draw solid background
+  } else if (drawMode == "Coloured Comets") {
+    background(0, 0, 0, 50); // draw slightly translucent background
+  } else if (drawMode == "Ghost Web" || drawMode == "Coloured Web") {
+    // no need to re-draw background
+  }
+  let yoff = 0;
+  for (let y = 0; y < rows; y++) {
+    let xoff = 0;
+    for (let x = 0; x < cols; x++) {
+      let index = x + y * cols;
+      let angle = noise(xoff, yoff, zoff) * TWO_PI * 4;
+      let v = p5.Vector.fromAngle(angle);
+      v.setMag(0.1);
+      flowfield[index] = v;
+      xoff += inc;
+      if (displayFieldModeCurrent) {
 
-          var index = (x + y *width)*4
-          var angle = noise(xoff, yoff, zoff )*TWO_PI;
-          var v = p5.Vector.fromAngle(angle);
-
-          xoff +=inc ;
-          stroke(0)
-
-          push()
-          translate(x*scl, y*scl);
-          rotate(v.heading());
-          line(0,0,scl,0 )
-          pop()
-
-        }
-        yoff +=inc;
-        zoff += 0.001;
+      }
     }
-    particle[0].update()
-    particle[0].show()
-    fr.html(floor(frameRate()))
+    yoff += inc;
+  }
+  zoff += inc*sin(yoff*inc*1);
+
+  for (let i = 0; i < particles.length; i++) {
+    particles[i].follow(flowfield);
+    particles[i].update(zoff);
+    particles[i].edges();
+    particles[i].show(zoff);
+  }
+
 }
