@@ -6,6 +6,7 @@ function Particle() {
   this.acc = createVector(0, 0);
   this.maxspeed = 2;
   this.prevPos = this.pos.copy();
+  this.mouseForce = createVector(0,0)
 
   this.update = function(zof) {
     this.vel.add(this.acc.mult(0.2));
@@ -13,6 +14,10 @@ function Particle() {
     this.pos.add(this.vel);
     this.acc.mult(0);
     this.init_color +=1 ;
+
+    this.mouseForce= createVector( mouseX - windowWidth/2, mouseY-windowHeight/2 )
+    // this.mouseForce.setMag(10 / p5.Vector.dist(this.pos, this.mouseForce))
+    this.mouseForce.setMag(0.2)
   }
 
   this.applyForce = function(force) {
@@ -68,7 +73,9 @@ function Particle() {
     let y = floor(this.pos.y / scl);
     let index = x + y * cols; // taking 2D value into a 1D array
     let force = vectors[index];
+    // force.setMag(0.5)
     this.applyForce(force);
+    this.applyForce(this.mouseForce);
   }
 
 }

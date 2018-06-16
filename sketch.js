@@ -28,7 +28,7 @@ function setup() {
 
   cols = floor(width / scl);
   rows = floor(height / scl);
-  numParticles = 1500;
+  numParticles = 2500;
   seedParticles(numParticles);
   flowfield = new Array(cols * rows);
   background(0);
@@ -60,7 +60,7 @@ function draw() {
       let index = x + y * cols;
       let angle = noise(xoff, yoff, zoff) * TWO_PI * 4;
       let v = p5.Vector.fromAngle(angle);
-      v.setMag(0.1);
+      v.setMag(0.15);
       flowfield[index] = v;
       xoff += inc;
       if (displayFieldModeCurrent) {
