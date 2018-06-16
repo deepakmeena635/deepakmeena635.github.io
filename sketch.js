@@ -15,19 +15,26 @@ let displayFieldMode;
 let displayFieldModeCurrent = false;
 let modalButton;
 
+
+function windowResized(){
+  resizeCanvas(windowWidth, windowHeight)
+}
+
 function setup() {
   // createCanvas(600, 400);
-  createCanvas(windowWidth, windowHeight );
+  canvas = createCanvas(windowWidth, windowHeight );
 
   ff = createGraphics(windowWidth, windowHeight ); // for displaying flow field
 
   cols = floor(width / scl);
   rows = floor(height / scl);
-  numParticles = 6000;
+  numParticles = 1500;
   seedParticles(numParticles);
   flowfield = new Array(cols * rows);
   background(0);
 
+  canvas.position(0,0);
+  canvas.style('z-index', '-1')
 
 }
 
