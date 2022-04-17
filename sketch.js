@@ -8,7 +8,7 @@ let particles = [];
 let flowfield;
 let numParticles;
 let modeSelectMenu;
-let drawMode = "Coloured Comets";
+let drawMode = "Colored Comets";
 let reseedMode;
 let reseedModeCurrent = true;
 let displayFieldMode;
