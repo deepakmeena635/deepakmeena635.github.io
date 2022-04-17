@@ -8,7 +8,7 @@ let particles = [];
 let flowfield;
 let numParticles;
 let modeSelectMenu;
-let drawMode = "White Flies";
+let drawMode = "Ghost Web";
 let reseedMode;
 let reseedModeCurrent = true;
 let displayFieldMode;
