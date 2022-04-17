@@ -28,7 +28,7 @@ function setup() {
 
   cols = floor(width / scl);
   rows = floor(height / scl);
-  numParticles = 2500;
+  numParticles = 1500;
   seedParticles(numParticles);
   flowfield = new Array(cols * rows);
   background(0);
