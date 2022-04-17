@@ -1,81 +1,38 @@
-let scl = 10;
-let cols;
-let rows;
-let inc = 0.02; // increment value for perlin noise
-let fr; // frame rate for display
-let zoff = 0;
-let particles = [];
-let flowfield;
-let numParticles;
-let modeSelectMenu;
-let drawMode = "Colored Comets";
-let reseedMode;
-let reseedModeCurrent = true;
-let displayFieldMode;
-let displayFieldModeCurrent = false;
-let modalButton;
-
-
-function windowResized(){
-  resizeCanvas(windowWidth, windowHeight)
-}
-
-function setup() {
-  // createCanvas(600, 400);
-  canvas = createCanvas(windowWidth, windowHeight );
-
-  ff = createGraphics(windowWidth, windowHeight ); // for displaying flow field
-
-  cols = floor(width / scl);
-  rows = floor(height / scl);
-  numParticles = 1500;
-  seedParticles(numParticles);
-  flowfield = new Array(cols * rows);
-  background(0);
-
-  canvas.position(0,0);
-  canvas.style('z-index', '-1')
-
-}
-
-function seedParticles(num) {
-  particles = [];
-  for (let i = 0; i < num; i++) {
-    particles[i] = new Particle();
-  }
-}
-
-function draw() {
-  if (drawMode == "White Flies") {
-    background(0); // draw solid background
-  } else if (drawMode == "Coloured Comets") {
-    background(0, 0, 0, 50); // draw slightly translucent background
-  } else if (drawMode == "Ghost Web" || drawMode == "Coloured Web") {
-    // no need to re-draw background
-  }
-  let yoff = 0;
-  for (let y = 0; y < rows; y++) {
-    let xoff = 0;
-    for (let x = 0; x < cols; x++) {
-      let index = x + y * cols;
-      let angle = noise(xoff, yoff, zoff) * TWO_PI * 4;
-      let v = p5.Vector.fromAngle(angle);
-      v.setMag(0.15);
-      flowfield[index] = v;
-      xoff += inc;
-      if (displayFieldModeCurrent) {
-
+class drop{
+  
+   constructor(){
+      this.x = random(0, windowWidth )
+      this.y =0
+     this.speed= 50; 
+     this.dropSize = 5; 
+    } 
+    reset(){
+      this.x = random(0, windowWidth )
+      this.y =0
+     this.speed= 10; 
+     this.dropSize = 5; 
+    } 
+    
+   fall(speed =0 ){
+     this.y =this.y+ this.speed
+     // console.log(this.y)
+      if (speed !=0 ){
+        this.speed = speed
       }
-    }
-    yoff += inc;
+     if (this.y <= height && this.y > height- 50  ){
+        // console.log(".")
+        var myDegrees = int(15+ 30/(this.y-15))
+        let la = p5.Vector.fromAngle(radians(myDegrees), this.dropSize);
+        let ra = p5.Vector.fromAngle(radians(myDegrees), this.dropSize);
+        line(this.x , this.y+this.dropSize, this.x-la.x, this.y-la.y)
+        line(this.x , this.y+this.dropSize, this.x+ra.x, this.y-ra.y)
+        line(this.x, this.y , this.x, this.y+this.dropSize )
+        this.reset();
+      }
+      line(this.x, this.y , this.x, this.y+this.dropSize )
+      stroke(255)
+      
   }
-  zoff += inc*sin(yoff*inc*1);
-
-  for (let i = 0; i < particles.length; i++) {
-    particles[i].follow(flowfield);
-    particles[i].update(zoff);
-    particles[i].edges();
-    particles[i].show(zoff);
-  }
-
+  
 }
+
